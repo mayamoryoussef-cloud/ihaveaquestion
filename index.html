@@ -1,64 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Will You Be My Valentine?</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #ffafbd, #ffc3a0);
-      height: 100vh;
-      overflow: hidden;
-      color: #ff4757;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    #app { text-align: center; z-index: 10; }
-    h1 { font-size: 3em; margin-bottom: 1em; animation: bounce 0.5s infinite; }
-    button {
-      background: #ff6b6b; color: white; border: none; padding: 15px 30px;
-      font-size: 1.2em; border-radius: 50px; cursor: pointer; margin: 10px;
-      transition: background 0.3s; box-shadow: 0 4px 15px rgba(255,107,107,0.4);
-    }
-    button:hover { background: #ff8787; transform: scale(1.05); }
-    .hidden { display: none; }
-    .floating-heart {
-      position: absolute; font-size: 2em; animation: float 15s infinite linear;
-      pointer-events: none;
-    }
-    @keyframes float {
-      0% { transform: translateY(100vh) translateX(0); opacity: 1; }
-      100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
-    }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    #musicBtn { position: fixed; top: 20px; right: 20px; }
-    .celebration { font-size: 4em; color: #ff4757; animation: bounce 0.5s infinite; }
-  </style>
-</head>
-<body>
-  <div id="app">
-    <div id="hearts"></div>
-    <div id="question1" style="display: block;">
-      <h1 id="q1-text"></h1>
-      <button id="yes1" onclick="handleFirstYes()">Yes</button>
-      <button id="no1" onclick="handleFirstNo()">No</button>
-    </div>
-    <div id="question2" class="hidden">
-      <h1 id="q2-text"></h1>
-      <button id="yes2" onclick="handleSecondYes()">Yes!</button>
-      <button id="no2" onclick="handleSecondNo()">No</button>
-    </div>
-    <div id="celebration" class="hidden celebration">
-      <h1>Yay!</h1>
-      <p>Happy Valentine's Day, Judith! ❤️</p>
-    </div>
-  </div>
-  <button id="musicBtn" onclick="toggleMusic()">🎵 Play Music</button>
-
   <script>
     const config = {
       valentineName: "Judith" 
