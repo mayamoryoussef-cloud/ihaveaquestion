@@ -1,58 +1,193 @@
 <!DOCTYPE html>
-const config = {
-  // Basic Information
-  valentineName: "Judith",                    // Your Valentine's name
-  pageTitle: "Will You Be My Valentine?",     // Browser tab title
-
-  // Floating Background Elements
-  floatingEmojis: {
-    hearts: ['❤️', '💘'],                    // Heart emojis in background
-  },
-
-  // Questions and Buttons
-  questions: {
-    first: {
-      text: "Are you my girlfriend Judith Danino?",  // Fixed typo: removed extra &
-      yesBtn: "Yes",                             // Yes button text
-      noBtn: "No",                               // No button text
-      secretAnswer: "No im ur wife 😁"           // Hidden message
-    },
-    second: {
-      text: "Will you be my Valentine...?",      // Final question
-      yesBtn: "Yes!",                            // Yes button text
-      noBtn: "No"                                // No button text
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+      height: 100vh;
+      overflow: hidden;
+      color: #ff4757;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
-  }, // Note: comma here for trailing properties
+    #app { text-align: center; z-index: 10; }
+    h1 { font-size: 3em; margin-bottom: 1em; animation: bounce 0.5s infinite; }
+    button {
+      background: #ff6b6b; color: white; border: none; padding: 15px 30px;
+      font-size: 1.2em; border-radius: 50px; cursor: pointer; margin: 10px;
+      transition: background 0.3s; box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+    }
+    button:hover { background: #ff8787; transform: scale(1.05); }
+    .hidden { display: none; }
+    .floating-heart {
+      position: absolute; font-size: 2em; animation: float 15s infinite linear;
+      pointer-events: none;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); opacity: 1; }
+      100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    #musicBtn { position: fixed; top: 20px; right: 20px; }
+    .celebration { font-size: 4em; color: #ff4757; animation: bounce 0.5s infinite; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="hearts"></div>
+    <div id="question1" style="display: block;">
+      <h1 id="q1-text"></h1>
+      <button id="yes1" onclick="handleFirstYes()">Yes</button>
+      <button id="no1" onclick="handleFirstNo()">No</button>
+    </div>
+    <div id="question2" class="hidden">
+      <h1 id="q2-text"></h1>
+      <button id="yes2" onclick="handleSecondYes()">Yes!</button>
+      <button id="no2" onclick="handleSecondNo()">No</button>
+    </div>
+    <div id="celebration" class="hidden celebration">
+      <h1>Yay!</h1>
+      <p>Happy Valentine's Day, Judith! ❤️</p>
+    </div>
+  </div>
+  <button id="musicBtn" onclick="toggleMusic()">🎵 Play Music</button>
 
-  // Final Celebration
-  celebration: {
-    title: "Yay!",                             // Celebration title
-  },
+  <script>
+    const config = {
+      valentineName: "Judith",
+      pageTitle: "Will You Be My Valentine?",
 
-  // Website Colors
-  colors: {
-    backgroundStart: "#ffafbd",                // Background gradient start
-    backgroundEnd: "#ffc3a0",                  // Background gradient end
-    buttonBackground: "#ff6b6b",               // Button color
-    buttonHover: "#ff8787",                    // Button hover color
-    textColor: "#ff4757"                       // Text color
-  },
+      floatingEmojis: { hearts: ['❤️', '💘'] },
 
-  // Animation Settings
-  animations: {
-    floatDuration: "15s",                      // How long hearts float (10-20s)
-    floatDistance: "50px",                     // Sideways movement (30-70px)
-    bounceSpeed: "0.5s",                       // Bounce animation speed (0.3-0.7s)
-    heartExplosionSize: 1.5                    // Final heart explosion size (1.2-2.0)
-  },
+      questions: {
+        first: {
+          text: "Are you my girlfriend Judith Danino?",
+          yesBtn: "Yes",
+          noBtn: "No",
+          secretAnswer: "No im ur wife 😁"
+        },
+        second: {
+          text: "Will you be my Valentine...?",
+          yesBtn: "Yes!",
+          noBtn: "No"
+        }
+      },
 
-  // Music Settings
-  music: {
-    enabled: true,                             // Music feature is enabled
-    autoplay: true,                            // Try to autoplay (note: some browsers may block this)
-    musicUrl: "https://res.cloudinary.com/ddc5rfylc/video/upload/v1770525889/The_Cranberries_-_Linger_Official_Music_Video_4_s8aae0.mp3",
-    startText: "🎵 Play Music",                // Button text to start music
-    stopText: "🔇 Stop Music",                 // Button text to stop music
-    volume: 0.5                                // Volume level (0.0 to 1.0)
-  }
-};
+      celebration: { title: "Yay!" },
+
+      colors: {
+        backgroundStart: "#ffafbd",
+        backgroundEnd: "#ffc3a0",
+        buttonBackground: "#ff6b6b",
+        buttonHover: "#ff8787",
+        textColor: "#ff4757"
+      },
+
+      animations: {
+        floatDuration: "15s",
+        floatDistance: "50px",
+        bounceSpeed: "0.5s",
+        heartExplosionSize: 1.5
+      },
+
+      music: {
+        enabled: true,
+        autoplay: false, // Changed to false for browser compliance
+        musicUrl: "https://res.cloudinary.com/ddc5rfylc/video/upload/v1770525889/The_Cranberries_-_Linger_Official_Music_Video_4_s8aae0.mp3",
+        startText: "🎵 Play Music",
+        stopText: "🔇 Stop Music",
+        volume: 0.5
+      }
+    };
+
+    document.title = config.pageTitle;
+    document.body.style.background = `linear-gradient(135deg, ${config.colors.backgroundStart}, ${config.colors.backgroundEnd})`;
+
+    let currentStep = 1;
+    let audio = null;
+
+    // Init
+    document.getElementById('q1-text').textContent = config.questions.first.text;
+    createFloatingHearts();
+
+    function createFloatingHearts() {
+      const heartsContainer = document.getElementById('hearts');
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.textContent = config.floatingEmojis.hearts[Math.floor(Math.random() * config.floatingEmojis.hearts.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = config.animations.floatDuration;
+        heart.style.animationDelay = Math.random() * 5 + 's';
+        heartsContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 16000);
+      }, 2000);
+    }
+
+    function handleFirstYes() {
+      document.getElementById('question1').classList.add('hidden');
+      document.getElementById('question2').classList.remove('hidden');
+      document.getElementById('q2-text').textContent = config.questions.second.text;
+    }
+
+    function handleFirstNo() {
+      alert(config.questions.first.secretAnswer);
+    }
+
+    function handleSecondYes() {
+      document.getElementById('question2').classList.add('hidden');
+      document.getElementById('celebration').classList.remove('hidden');
+      // Heart explosion
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => createExplosionHeart(), i * 100);
+      }
+    }
+
+    function handleSecondNo() {
+      alert('😢 Try again?');
+      currentStep = 1;
+      document.getElementById('question2').classList.add('hidden');
+      document.getElementById('question1').classList.remove('hidden');
+    }
+
+    function createExplosionHeart() {
+      const heart = document.createElement('div');
+      heart.textContent = '❤️';
+      heart.style.position = 'fixed';
+      heart.style.left = '50%';
+      heart.style.top = '50%';
+      heart.style.fontSize = '2em';
+      heart.style.transform = `translate(-50%, -50%) scale(${config.animations.heartExplosionSize})`;
+      heart.style.pointerEvents = 'none';
+      heart.style.zIndex = '20';
+      heart.style.animation = 'bounce 0.5s';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
+    }
+
+    function toggleMusic() {
+      const btn = document.getElementById('musicBtn');
+      if (!audio) {
+        audio = new Audio(config.music.musicUrl);
+        audio.volume = config.music.volume;
+        audio.loop = true;
+      }
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = config.music.stopText;
+      } else {
+        audio.pause();
+        btn.textContent = config.music.startText;
+      }
+    }
+  </script>
+</body>
+</html>
+
